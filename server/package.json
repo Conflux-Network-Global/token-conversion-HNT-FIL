@@ -9,6 +9,7 @@
   "dependencies": {
     "@textile/powergate-client": "^0.2.0",
     "axios": "^0.19.2",
+    "bn.js": "^5.1.2",
     "js-conflux-sdk": "^0.13.4"
   }
 }

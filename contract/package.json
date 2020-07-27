@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "js-conflux-sdk": "^0.13.4"
+  },
+  "name": "contract",
+  "version": "1.0.0",
+  "license": "MIT"
+}
