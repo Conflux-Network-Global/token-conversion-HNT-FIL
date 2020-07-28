@@ -12,6 +12,9 @@ const cfx = new Conflux({
   url: "http://testnet-jsonrpc.conflux-chain.org:12537",
   // logger: console,
 }); //conflux instance
+const contract = cfx.Contract({
+  abi: require("../contract/abi.json"), //can be copied from remix
+});
 
 const host = "http://0.0.0.0:6002"; //powergate IP
 const pow = createPow({ host }); //powergate instance
@@ -31,10 +34,10 @@ const main = async () => {
 
     //loop for checking and conducting atomic swaps
     const loop = async () => {
-      const eventCheck = await cfxCheck(); //check for new events from CFX contract
-      console.log(eventCheck);
+      const events = await cfxCheck(); //check for new events from CFX contract
+      console.log(events);
 
-      if (!!eventCheck) {
+      for (let i = 0; i < events.length; i++) {
         //when a new log is found
         const received = await hilCheck(
           "yHbuZulfU-Hn-IzzkdmqhPeqbUcY5IXn51G9HZuYcLI" //TODO: pass in HIL transaction hash from event
@@ -53,8 +56,8 @@ const main = async () => {
       }
     };
 
-    // setInterval(loop, 5000); //run in a loop
-    loop();
+    setInterval(loop, 5000); //run in a loop
+    // loop();
   } catch (e) {
     console.log("main: ", e);
   }
@@ -63,24 +66,27 @@ const main = async () => {
 //check if event is emitted on Conflux
 const cfxCheck = async () => {
   try {
-    const newEpoch = await cfx.getEpochNumber(); //get epoch when checked
-    console.log(`Checking from epoch ${epoch} to epoch ${newEpoch - 2}`);
+    let newEpoch = await cfx.getEpochNumber(); //get epoch when checked
+    newEpoch = newEpoch - 2; //subtract two to prevent errors with block not mined yet
+    console.log(`Checking from epoch ${epoch} to epoch ${newEpoch}`);
+    if (epoch >= newEpoch) { //check if epoch < newEpoch (reduce RPC call errors)
+      console.log("waiting for blocks to increase");
+      return [];
+    }
     const logs = await cfx.getLogs({
       //get logs at address
-      address: "0xbd72de06cd4a94ad31ed9303cf32a2bccb82c404",
+      address: "0x8975f507a3d577aefbfefc929c9891b529fb1398",
       fromEpoch: epoch,
-      toEpoch: newEpoch - 2, //subtract two to prevent errors with block not mined yet
+      toEpoch: newEpoch,
     });
-    console.log("CFX", logs);
 
-    //TODO: deploy smart contract for testing + event decoding using ABI
-    // smart contract
+    const data = logs.map((log) => contract.abi.decodeLog(log).object); //decode detected devents
 
-    epoch = newEpoch - 1; //only subtract 1 because the to/from in get logs is inclusive (no duplicate blocks)
-    return true; //TODO: return event parameters
+    epoch = newEpoch + 1; //add 1 because the to/from in get logs is inclusive (no duplicate blocks)
+    return data; //return event parameters
   } catch (e) {
     console.log("CFX: ", e);
-    return false;
+    return [];
   }
 };
 
