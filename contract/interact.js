@@ -33,15 +33,15 @@ async function main() {
 
   // //set current rate
   // const rateTransaction = await contract
-  //   .setRate("1000000000000000000")
+  //   .setRate("10000000000")
   //   .sendTransaction({ from: account });
   // console.log(rateTransaction);
 
   // submit HNT transaction and convert to FIL
   const convertTransaction = await contract
     .FIL2HIL(
-      "yHbuZulfU-Hn-IzzkdmqhPeqbUcY5IXn51G9HZuYcL4",
-      "t3q5z6nbg4mi4u46snrcznhtilwvxlaafcgpw7exouvvypb3vubltnjurg7jnm6frzwwsogjcmddyb3wd4u4q0"
+      "GHbuZulfU-Hn-IzzkdmqhPeqbUcY5IXn51G9HZuYcL9",
+      "t3q5z6nbg4mi4u46snrcznhtilwvxlaafcgpw7exouvvypb3vubltnjurg7jnm6frzwwsogjcmddyb3wd4u4qq"
       // "yHbuZulfU-Hn-IzzkdmqhPeqbUcY5IXn51G9HZuYcLI",
       // "t3q5z6nbg4mi4u46snrcznhtilwvxlaafcgpw7exouvvypb3vubltnjurg7jnm6frzwwsogjcmddyb3wd4u4qq"
     )

@@ -3,7 +3,7 @@ pragma solidity ^0.6.0;
 contract swap {
     address owner;
     event convert(string transactionHNT, string addressFIL, uint256 rate);
-    uint256 public rate; //rate/1e18 FIL
+    uint256 public rate; //rate/1e18 = $HNT/$FIL = amount FIL to buy 1 HNT
     mapping (bytes32 => bool) FILtransactions;
 
     constructor() public {

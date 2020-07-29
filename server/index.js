@@ -38,17 +38,19 @@ const main = async () => {
       console.log(events);
 
       for (let i = 0; i < events.length; i++) {
+        const event = events[i];
+
         //when a new log is found
+        // const received = await hilCheck(event.transactionHNT); //check transaction for correct parameters and amount
         const received = await hilCheck(
-          "yHbuZulfU-Hn-IzzkdmqhPeqbUcY5IXn51G9HZuYcLI" //TODO: pass in HIL transaction hash from event
-        ); //check transaction for correct parameters and amount
-        console.log(received);
+          "yHbuZulfU-Hn-IzzkdmqhPeqbUcY5IXn51G9HZuYcLI"
+        );
+        // console.log(received);
         if (!!received) {
-          //if correct transaction exists, send FIL
-          const sent = await sendFIL(
-            "t3q5z6nbg4mi4u46snrcznhtilwvxlaafcgpw7exouvvypb3vubltnjurg7jnm6frzwwsogjcmddyb3wd4u4qq", //TODO: pass in FIL address from event
-            "1e10" //TODO: pass in FIL amount from event and conversion
-          );
+          //if correct transaction exists, calculate and send FIL
+          const amt = amtCalc(received, event.rate);
+          console.log(amt);
+          const sent = await sendFIL(event.addressFIL, amt.toString());
           console.log(
             `${received / ratioHNT} HNT converted to ${sent / ratioFIL} FIL`
           );
@@ -69,7 +71,8 @@ const cfxCheck = async () => {
     let newEpoch = await cfx.getEpochNumber(); //get epoch when checked
     newEpoch = newEpoch - 2; //subtract two to prevent errors with block not mined yet
     console.log(`Checking from epoch ${epoch} to epoch ${newEpoch}`);
-    if (epoch >= newEpoch) { //check if epoch < newEpoch (reduce RPC call errors)
+    if (epoch >= newEpoch) {
+      //check if epoch < newEpoch (reduce RPC call errors)
       console.log("waiting for blocks to increase");
       return [];
     }
@@ -108,15 +111,24 @@ const hilCheck = async (transaction) => {
     }
     return output; //return bone (HNT) amount
   } catch (e) {
-    console.log("HNT: ", e);
+    // console.log("HNT: ", e);
+    console.log("HNT: invalid transaction");
   }
+};
+
+//calculate FIL amount
+const amtCalc = (amtHNT, rate) => {
+  amtHNT = amtHNT / ratioHNT;
+  rate = rate / 1e18;
+  console.log(amtHNT, rate);
+  return amtHNT * rate * ratioFIL;
 };
 
 //send FIL to correct address using powergate
 const sendFIL = async (address, amt) => {
   try {
     //send amount to specific address
-    await pow.ffs.sendFil(walletsFIL[0].addr, address, amt);
+    await pow.ffs.sendFil(walletsFIL[0].addr, address, amt); //future implementations should have a method to check if there is enough FIL to send (and handle if there is not)
     return amt;
   } catch (e) {
     console.log("FIL: ", e);
