@@ -5,7 +5,8 @@ const fs = require("fs");
 const BN = require("bn.js");
 
 //global variables
-const walletHNT = "13mCuVY4A3TUb2BuXeTq8KqBFKEZwEwKfTKPgc9KAZ39WsLuBhy"; //HNT wallet address
+const walletHNT = "13bmmTR2wVqYoj7E85dXgA8cVSbYP2bWD7YhBDNf9N2vm9DpQPf"; //HNT wallet address
+const cfxContract = "0x8975f507a3d577aefbfefc929c9891b529fb1398"; //contract address
 
 let epoch; //current epoch - used to track event logs
 const cfx = new Conflux({
@@ -41,15 +42,12 @@ const main = async () => {
         const event = events[i];
 
         //when a new log is found
-        // const received = await hilCheck(event.transactionHNT); //check transaction for correct parameters and amount
-        const received = await hilCheck(
-          "yHbuZulfU-Hn-IzzkdmqhPeqbUcY5IXn51G9HZuYcLI"
-        );
+        const received = await hntCheck(event.transactionHNT); //check transaction for correct parameters and amount
         // console.log(received);
         if (!!received) {
           //if correct transaction exists, calculate and send FIL
           const amt = amtCalc(received, event.rate);
-          console.log(amt);
+          console.log("attoFIL: ", amt);
           const sent = await sendFIL(event.addressFIL, amt.toString());
           console.log(
             `${received / ratioHNT} HNT converted to ${sent / ratioFIL} FIL`
@@ -78,7 +76,7 @@ const cfxCheck = async () => {
     }
     const logs = await cfx.getLogs({
       //get logs at address
-      address: "0x8975f507a3d577aefbfefc929c9891b529fb1398",
+      address: cfxContract,
       fromEpoch: epoch,
       toEpoch: newEpoch,
     });
@@ -94,9 +92,8 @@ const cfxCheck = async () => {
 };
 
 //check Helium transaction (API request and verify transaction)
-const hilCheck = async (transaction) => {
+const hntCheck = async (transaction) => {
   try {
-    console.log("HNT");
     const data = await axios.get(
       //api request to Helium
       `https://api.helium.io/v1/transactions/${transaction}`
@@ -120,8 +117,8 @@ const hilCheck = async (transaction) => {
 const amtCalc = (amtHNT, rate) => {
   amtHNT = amtHNT / ratioHNT;
   rate = rate / 1e18;
-  console.log(amtHNT, rate);
-  return amtHNT * rate * ratioFIL;
+  console.log("HNT Received: ", amtHNT, " Rate: ", rate);
+  return Math.round(amtHNT * rate * ratioFIL);
 };
 
 //send FIL to correct address using powergate

@@ -4,6 +4,9 @@ const { Conflux } = require("js-conflux-sdk");
 require("dotenv").config();
 
 const PRIVATE_KEY = process.env.PRIVATE_KEY;
+const HNT_TRANSACTION = "k6fu3SqhF3X-kBaFWDtRxtTixLt1Nelsjlvmaia3z4s";
+const FIL_ADDRESS =
+  "t3q5z6nbg4mi4u46snrcznhtilwvxlaafcgpw7exouvvypb3vubltnjurg7jnm6frzwwsogjcmddyb3wd4u4qq";
 
 async function main() {
   const cfx = new Conflux({
@@ -39,12 +42,7 @@ async function main() {
 
   // submit HNT transaction and convert to FIL
   const convertTransaction = await contract
-    .FIL2HIL(
-      "GHbuZulfU-Hn-IzzkdmqhPeqbUcY5IXn51G9HZuYcL9",
-      "t3q5z6nbg4mi4u46snrcznhtilwvxlaafcgpw7exouvvypb3vubltnjurg7jnm6frzwwsogjcmddyb3wd4u4qq"
-      // "yHbuZulfU-Hn-IzzkdmqhPeqbUcY5IXn51G9HZuYcLI",
-      // "t3q5z6nbg4mi4u46snrcznhtilwvxlaafcgpw7exouvvypb3vubltnjurg7jnm6frzwwsogjcmddyb3wd4u4qq"
-    )
+    .FIL2HIL(HNT_TRANSACTION, FIL_ADDRESS)
     .sendTransaction({ from: account });
   console.log(convertTransaction);
 }
