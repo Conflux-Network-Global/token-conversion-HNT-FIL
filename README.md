@@ -1,13 +1,13 @@
 # HNT to FIL Conversion Using Conflux Network
-A simple demonstration of connecting Helium Network and Filecoin (using Powergate) that has the potential to facilitate IoT and decentralized storage connectivity. The token conversion is handled by a server that monitor a Conflux Network smart contract that handles basic record keeping.
+A simple demonstration of connecting [Helium Network](https://www.helium.com/) and [Filecoin](https://filecoin.io/) (using [Powergate](https://docs.textile.io/powergate/)) that has the potential to facilitate IoT and decentralized storage connectivity. The token conversion is handled by a server that monitor a [Conflux Network](https://confluxnetwork.org/) smart contract that handles basic record keeping.
 
 ## Components
-Conflux Network + Javascript SDK  
-Filecoin Powergate + Javascript SDK   
-Helium Wallet CLI
+[Conflux Network](https://developer.conflux-chain.org/) + [Javascript SDK](https://www.npmjs.com/package/js-conflux-sdk)  
+Filecoin [Powergate](https://docs.textile.io/powergate/) + [Javascript SDK](https://github.com/textileio/js-powergate-client)   
+[Helium Wallet CLI](https://developer.helium.com/blockchain/blockchain-cli)
 
 ![](./figures/demo-sequence.png)
-_Sequence diagram illustrating the communication between various components in order for HNT tokens to be converted to FIL tokens_ 
+_Sequence diagram illustrating the communication between various components in order for HNT tokens to be converted to FIL tokens_
 
 ## Setup Steps
 1. Setup [Powergate](https://docs.textile.io/powergate/) and start the [localnet](https://docs.textile.io/powergate/localnet/) using:
