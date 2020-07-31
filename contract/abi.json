@@ -42,7 +42,7 @@
 				"type": "string"
 			}
 		],
-		"name": "FIL2HIL",
+		"name": "HNT2FIL",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"

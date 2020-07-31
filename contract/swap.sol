@@ -11,7 +11,7 @@ contract swap {
     }
 
     //initiatve conversion
-    function FIL2HIL (string calldata _transaction, string calldata _address) external {
+    function HNT2FIL (string calldata _transaction, string calldata _address) external {
         //checking lengths of inputs
         require(bytes(_transaction).length == 43, "HNT transaction hash incorrect");
         require(bytes(_address).length == 86, "FIL address invalid");

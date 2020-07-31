@@ -42,7 +42,7 @@ async function main() {
 
   // submit HNT transaction and convert to FIL
   const convertTransaction = await contract
-    .FIL2HIL(HNT_TRANSACTION, FIL_ADDRESS)
+    .HNT2FIL(HNT_TRANSACTION, FIL_ADDRESS)
     .sendTransaction({ from: account });
   console.log(convertTransaction);
 }
